@@ -55,7 +55,7 @@ function menu(){
                     'Create one certificate',
                     'Delete all certificates',
                     'Exit',
-                    'Create certificates from randome names'
+                    'Create certificates from random fullnames'
                 ],
             },
         ])
@@ -89,7 +89,7 @@ function menu(){
                 case 'Exit':
                     break;
 
-                case 'Create certificates from randome names':
+                case 'Create certificates from random fullnames':
                     const count = readlineSync.question('Count of Cert: ');
                     for (let i = 0; i < +count ; i++) {
                         await modifyPdf(faker.name.findName());
@@ -105,4 +105,5 @@ function menu(){
             console.error(err);
         });
 }
+
 menu()
