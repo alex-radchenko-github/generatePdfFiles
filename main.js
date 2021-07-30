@@ -1,4 +1,4 @@
-const { degrees, PDFDocument, rgb, StandardFonts } = require('pdf-lib')
+const { PDFDocument, rgb } = require('pdf-lib')
 const fontkit = require('@pdf-lib/fontkit');
 const inquirer = require('inquirer');
 const fs = require("fs");
@@ -9,25 +9,37 @@ var fullName = ''
 
 
 async function modifyPdf(fullName) {
+
+    // read the template file
     const pdfDoc = await PDFDocument.load(fs.readFileSync('./src/basePDF/base2.pdf'))
 
+    // read font file
     const fontData = fs.readFileSync('./src/fonts/calligraph_[allfont.ru].ttf');
+
+    // register Fontkit to connect an external font
     pdfDoc.registerFontkit(fontkit);
 
+    // initialize the font
+    const font = await pdfDoc.embedFont(fontData)
 
-    const helveticaFont = await pdfDoc.embedFont(fontData)
-    const pages = pdfDoc.getPages()
-    const firstPage = pages[0]
+    // take the first page
+    const firstPage = pdfDoc.getPages()[0]
+
+    // determine the width and height of the first page
     const { width, height } = firstPage.getSize()
+
+    // insert text on the first page
     firstPage.drawText(fullName, {
         x: (width/2)-(fullName.length*49),
         y: height / 2 - 300,
         size: 300,
-        font: helveticaFont,
+        font: font,
         color: rgb(0, 0, 0),
     })
 
-    fs.writeFileSync(`./temp/${fullName}.pdf`, await pdfDoc.save());
+    // write a new PDF file with text
+    fs.writeFileSync(`./temp/${fullName}.pdf`, await pdfDoc.save())
+
 }
 
 function menu(){
@@ -37,7 +49,13 @@ function menu(){
                 type: 'list',
                 message: 'Choose your action',
                 name: 'actions',
-                choices: ['Create certificates from list', 'Create one certificate', 'Delete all certificates', 'Exit', 'Create certificates from randome names'],
+                choices: [
+                    'Create certificates from list',
+                    'Create one certificate',
+                    'Delete all certificates',
+                    'Exit',
+                    'Create certificates from randome names'
+                ],
             },
         ])
         .then(async (answers) => {
