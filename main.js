@@ -5,6 +5,7 @@ const fs = require("fs");
 const readlineSync = require('readline-sync');
 var faker = require('faker');
 
+// variable with full name
 var fullName = ''
 
 
