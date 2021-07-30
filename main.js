@@ -3,10 +3,10 @@ const fontkit = require('@pdf-lib/fontkit');
 const inquirer = require('inquirer');
 const fs = require("fs");
 const readlineSync = require('readline-sync');
-var faker = require('faker');
+const faker = require('faker');
 
 // variable with full name
-var fullName = ''
+let fullName = '';
 
 
 async function modifyPdf(fullName) {
@@ -63,9 +63,9 @@ function menu(){
             console.info('Action is ' + answers.actions);
             switch(answers.actions) {
                 case 'Create certificates from list':
-                    var listNname = readlineSync.question('Specify sheet name for certificates: ');
+                    const listName = readlineSync.question('Specify sheet name for certificates: ');
 
-                    var namesListFromFile = fs.readFileSync(`./src/lists/${listNname}`,'utf8');
+                    let namesListFromFile = fs.readFileSync(`./src/lists/${listName}`, 'utf8');
                     namesListFromFile = namesListFromFile.split('\n');
 
                     for (const i in namesListFromFile) {
@@ -75,7 +75,7 @@ function menu(){
                     return menu();
 
                 case 'Create one certificate':
-                    var name = readlineSync.question('Name in the certificates: ');
+                    const name = readlineSync.question('Name in the certificates: ');
                     fullName = name;
                     await modifyPdf(fullName);
                     return menu();
@@ -90,7 +90,7 @@ function menu(){
                     break;
 
                 case 'Create certificates from randome names':
-                    var count = readlineSync.question('Count of Cert: ');
+                    const count = readlineSync.question('Count of Cert: ');
                     for (let i = 0; i < +count ; i++) {
                         await modifyPdf(faker.name.findName());
                     }
